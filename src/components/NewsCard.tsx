@@ -39,7 +39,7 @@ export default function NewsCard({ article }: NewsCardProps) {
     bg: "bg-gray-100",
     text: "text-gray-600",
   };
-  // const fallback = FALLBACK_IMAGES[article.category] || FALLBACK_IMAGES.general;
+  const fallback = FALLBACK_IMAGES[article.category] || FALLBACK_IMAGES.general;
 
   return (
     <article
@@ -53,7 +53,9 @@ export default function NewsCard({ article }: NewsCardProps) {
       <div className="relative h-44 overflow-hidden bg-gray-100 flex-shrink-0">
         <img
           src={
-            article.image_url && article.image_url.trim() !== ""
+            article.image_url &&
+            article.image_url !== "null" &&
+            article.image_url.trim() !== ""
               ? article.image_url
               : `https://loremflickr.com/600/400/business,finance?lock=${article.id}`
           }
@@ -62,6 +64,7 @@ export default function NewsCard({ article }: NewsCardProps) {
           loading="lazy"
           onError={(e) => {
             const img = e.target as HTMLImageElement;
+            // ถ้าลองดึงแล้วยังพังอีก ให้ยัดรูปสุ่มเข้าไปใหม่
             img.src = `https://loremflickr.com/600/400/economy?lock=${article.id}`;
           }}
         />
