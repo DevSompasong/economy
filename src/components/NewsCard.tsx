@@ -45,7 +45,8 @@ export default function NewsCard({ article }: NewsCardProps) {
 
       <div className="relative h-44 overflow-hidden bg-gray-100 flex-shrink-0">
         <img
-          src={article.image_url || fallback}
+          // src={article.image_url || fallback}
+          src={article.image_url || `https://loremflickr.com/600/400/finance,business?lock=${article.id}`}
           alt={article.title_th || article.title}
           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
           loading="lazy"
