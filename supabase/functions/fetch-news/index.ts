@@ -37,11 +37,12 @@ serve(async (req: Request) => {
         const descTh = await translateToThai(article.description);
 
         return {
-          title: article.title,
-          description: article.description,
+          title: titleTh,
+          description: descTh,
           title_th: titleTh,
           description_th: descTh,
           url: article.url,
+          image_url: article.urlToImage,
           url_to_image: article.urlToImage,
           published_at: article.publishedAt,
           source_name: article.source.name,
