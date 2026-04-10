@@ -43,7 +43,6 @@ serve(async (req: Request) => {
           description_th: descTh,
           url: article.url,
           image_url: article.urlToImage,
-          url_to_image: article.urlToImage,
           published_at: article.publishedAt,
           source_name: article.source.name,
           category: 'business'
