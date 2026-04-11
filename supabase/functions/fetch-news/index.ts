@@ -9,7 +9,7 @@ const corsHeaders = {
 async function translateToThai(text: string): Promise<string> {
   if (!text) return "";
   try {
-    const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=en|th`);
+    const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=en|th&de=sompasong754@gmail.com`);
     const data = await res.json();
     return data.responseData.translatedText || text;
   } catch {
@@ -27,14 +27,32 @@ serve(async (req: Request) => {
     )
 
     const newsApiKey = Deno.env.get('NEWSAPI_KEY')
-    const response = await fetch(`https://newsapi.org/v2/top-headlines?category=business&language=en&apiKey=${newsApiKey}`)
+   
+    const response = await fetch(`https://newsapi.org/v2/everything?q=(economy OR stocks OR forex OR crypto)&language=en&pageSize=10&apiKey=${newsApiKey}`)
     const data = await response.json()
 
-    // ใช้ Promise.all เพื่อรอให้แปลครบทุกข่าว
+
+   
     const resolvedArticles = await Promise.all(
       data.articles.map(async (article: any) => {
         const titleTh = await translateToThai(article.title);
         const descTh = await translateToThai(article.description);
+        
+        // --- ส่วนที่เพิ่มใหม่: ตรวจสอบหมวดหมู่จากคำสำคัญ ---
+        const titleLower = (article.title || "").toLowerCase();
+        const descLower = (article.description || "").toLowerCase();
+        const combinedText = `${titleLower} ${descLower}`;
+
+        let categoryTag = 'ECONOMY'; // ค่าเริ่มต้นถ้าไม่เข้าเงื่อนไขอื่น
+
+        if (combinedText.includes('forex') || combinedText.includes('currency') || combinedText.includes('exchange rate')) {
+          categoryTag = 'FOREX';
+        } else if (combinedText.includes('stock') || combinedText.includes('market') || combinedText.includes('nasdaq') || combinedText.includes('dividend')) {
+          categoryTag = 'STOCKS';
+        } else if (combinedText.includes('crypto') || combinedText.includes('bitcoin') || combinedText.includes('ethereum') || combinedText.includes('blockchain')) {
+          categoryTag = 'CRYPTO';
+        }
+        // -------------------------------------------
 
         return {
           title: titleTh,
@@ -45,7 +63,7 @@ serve(async (req: Request) => {
           image_url: article.urlToImage,
           published_at: article.publishedAt,
           source_name: article.source.name,
-          category: 'business'
+          category: categoryTag // แก้จาก 'business' เป็นตัวแปร categoryTag
         }
       })
     );
