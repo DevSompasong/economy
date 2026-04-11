@@ -40,8 +40,8 @@ function timeAgo(dateStr: string | null) {
 
 export default function NewsCard({ article }: NewsCardProps) {
   const navigate = useNavigate(); // ต้องมีบรรทัดนี้ไว้ข้างในฟังก์ชัน
-  // หาบรรทัดนี้แล้วแก้ให้เป็น .toUpperCase()
-const badge = CATEGORY_BADGE[article.category?.toUpperCase()] || CATEGORY_BADGE.ECONOMY;
+  // เปลี่ยนจากแบบเดิม เป็นแบบที่มี .toUpperCase()
+  const badge = CATEGORY_BADGE[article.category?.toUpperCase()] || CATEGORY_BADGE.ECONOMY;
   const fallback = FALLBACK_IMAGES[article.category] || FALLBACK_IMAGES.general;
 
   return (
