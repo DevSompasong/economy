@@ -1,5 +1,6 @@
 import { ExternalLink, Clock } from "lucide-react";
 import type { NewsArticle } from "../types/database";
+import { useNavigate } from "react-router-dom";
 
 type NewsCardProps = {
   article: NewsArticle;
@@ -35,6 +36,7 @@ function timeAgo(dateStr: string | null) {
 }
 
 export default function NewsCard({ article }: NewsCardProps) {
+  const navigate = useNavigate(); // ต้องมีบรรทัดนี้ไว้ข้างในฟังก์ชัน
   const badge = CATEGORY_BADGE[article.category] || {
     bg: "bg-gray-100",
     text: "text-gray-600",
@@ -107,16 +109,14 @@ export default function NewsCard({ article }: NewsCardProps) {
           </p>
         )}
 
-        <a
-          href={article.url}
-          target="_blank"
-          rel="noopener noreferrer"
+        <button
+          onClick={() => navigate(`/news/${article.id}`)}
           className="mt-auto flex items-center gap-1 text-xs font-semibold text-blue-600 hover:text-blue-800 transition-colors group/link"
           aria-label={`Read article: ${article.title}`}
         >
-          Read More
+          อ่านรายละเอียดแบบเต็ม
           <ExternalLink className="w-3 h-3 transition-transform group-hover/link:translate-x-0.5" />
-        </a>
+        </button>
       </div>
     </article>
   );
