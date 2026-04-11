@@ -18,7 +18,7 @@ export async function fetchArticlesFromDB(
     .range((page - 1) * pageSize, page * pageSize - 1);
 
   if (category !== 'all') {
-    query = query.eq('category', category);
+    query = query.eq('category', category.toUpperCase());
   }
 
   if (searchQuery.trim()) {
