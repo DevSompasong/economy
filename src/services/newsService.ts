@@ -14,12 +14,18 @@ export async function fetchArticlesFromDB(
     .from('news_articles')
     .select('*', { count: 'exact' })
     .eq('is_published', true)
-    .order('published_at', { ascending: false })
-    .range((page - 1) * pageSize, page * pageSize - 1);
+    .order('published_at', { ascending: false });
 
-  if (category !== 'all') {
-    query = query.eq('category', category.toUpperCase());
+  // --- จุดที่แก้ไข: ทำให้การ Filter แม่นยำขึ้น ---
+  if (category && category.toLowerCase() !== 'all') {
+    // ใช้ ilike เพื่อให้หาเจอทั้งตัวเล็กและตัวใหญ่ (เช่น crypto หรือ CRYPTO ก็เจอ)
+    query = query.ilike('category', category); 
   }
+
+  // คำนวณ Range สำหรับ Pagination
+  const from = (page - 1) * pageSize;
+  const to = from + pageSize - 1;
+  query = query.range(from, to);
 
   if (searchQuery.trim()) {
     query = query.or(
@@ -29,37 +35,47 @@ export async function fetchArticlesFromDB(
 
   const { data, error, count } = await query;
 
-  if (error) throw error;
+  if (error) {
+    console.error('Supabase error:', error);
+    throw error;
+  }
 
   return { articles: data || [], count: count || 0 };
 }
 
 export async function triggerNewsFetch(category: string): Promise<{ success: boolean; message: string }> {
-  const apiUrl = `${SUPABASE_URL}/functions/v1/fetch-news?category=${category}`;
+  // ตรวจสอบว่ามีค่า category ส่งมาไหม
+  const searchCat = category || 'general';
+  const apiUrl = `${SUPABASE_URL}/functions/v1/fetch-news?category=${searchCat.toLowerCase()}`;
 
-  const response = await fetch(apiUrl, {
-    headers: {
-      Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-      'Content-Type': 'application/json',
-    },
-  });
+  try {
+    const response = await fetch(apiUrl, {
+      headers: {
+        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+        'Content-Type': 'application/json',
+      },
+    });
 
-  const data = await response.json();
+    const data = await response.json();
 
-  if (!response.ok) {
+    if (!response.ok) {
+      return {
+        success: false,
+        message: data.error || 'Failed to fetch news from API',
+      };
+    }
+
     return {
-      success: false,
-      message: data.error || 'Failed to fetch news from API',
+      success: true,
+      message: `Fetched ${data.fetched || 0} articles, updated ${data.upserted || 0}`,
     };
+  } catch (err) {
+    return { success: false, message: 'Network error or function timeout' };
   }
-
-  return {
-    success: true,
-    message: `Fetched ${data.fetched || 0} articles, updated ${data.upserted || 0}`,
-  };
 }
 
 export async function triggerAllCategoriesFetch(): Promise<void> {
-  const categories = ['general', 'stocks', 'forex', 'crypto'];
+  // เพิ่ม ECONOMY เข้าไปในรายการดึงข้อมูลด้วย
+  const categories = ['economy', 'stocks', 'forex', 'crypto'];
   await Promise.allSettled(categories.map((cat) => triggerNewsFetch(cat)));
 }
