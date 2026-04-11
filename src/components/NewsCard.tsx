@@ -8,11 +8,11 @@ type NewsCardProps = {
 
 
 const CATEGORY_BADGE: Record<string, { bg: string; text: string }> = {
-  ECONOMY: { bg: "bg-blue-100", text: "text-blue-700" },
+  ECONOMY: { bg: "bg-blue-100", text: "text-blue-700" }, // เพิ่มอันนี้เข้าไป
   STOCKS: { bg: "bg-emerald-100", text: "text-emerald-700" },
   FOREX: { bg: "bg-amber-100", text: "text-amber-700" },
   CRYPTO: { bg: "bg-orange-100", text: "text-orange-700" },
-  GENERAL: { bg: "bg-gray-100", text: "text-gray-700" }, // เผื่อไว้กันพลาด
+  GENERAL: { bg: "bg-gray-100", text: "text-gray-700" },
 };
 
 
@@ -41,7 +41,7 @@ function timeAgo(dateStr: string | null) {
 export default function NewsCard({ article }: NewsCardProps) {
   const navigate = useNavigate(); // ต้องมีบรรทัดนี้ไว้ข้างในฟังก์ชัน
   // เปลี่ยนจากแบบเดิม เป็นแบบที่มี .toUpperCase()
-  const badge = CATEGORY_BADGE[article.category?.toUpperCase()] || CATEGORY_BADGE.ECONOMY;
+  const badge = CATEGORY_BADGE[article.category?.toUpperCase()] || CATEGORY_BADGE.GENERAL;
   const fallback = FALLBACK_IMAGES[article.category] || FALLBACK_IMAGES.general;
 
   return (
