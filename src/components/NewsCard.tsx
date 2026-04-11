@@ -7,8 +7,9 @@ type NewsCardProps = {
 };
 
 
+// 1. แก้ชื่อ Key ให้เป็นตัวพิมพ์ใหญ่ทั้งหมด และเพิ่ม ECONOMY เข้าไป
 const CATEGORY_BADGE: Record<string, { bg: string; text: string }> = {
-  ECONOMY: { bg: "bg-blue-100", text: "text-blue-700" }, // เพิ่มอันนี้เข้าไป
+  ECONOMY: { bg: "bg-blue-100", text: "text-blue-700" }, 
   STOCKS: { bg: "bg-emerald-100", text: "text-emerald-700" },
   FOREX: { bg: "bg-amber-100", text: "text-amber-700" },
   CRYPTO: { bg: "bg-orange-100", text: "text-orange-700" },
@@ -40,7 +41,7 @@ function timeAgo(dateStr: string | null) {
 
 export default function NewsCard({ article }: NewsCardProps) {
   const navigate = useNavigate(); // ต้องมีบรรทัดนี้ไว้ข้างในฟังก์ชัน
-  // เปลี่ยนจากแบบเดิม เป็นแบบที่มี .toUpperCase()
+  // 2. ตรงบรรทัดที่ 44 แก้ตัวสำรอง (Fallback) ให้เป็น .GENERAL
   const badge = CATEGORY_BADGE[article.category?.toUpperCase()] || CATEGORY_BADGE.GENERAL;
   const fallback = FALLBACK_IMAGES[article.category] || FALLBACK_IMAGES.general;
 
