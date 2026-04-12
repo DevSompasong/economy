@@ -8,7 +8,7 @@ type FilterBarProps = {
 
 const FILTERS: { label: string; value: Category; icon: React.ReactNode }[] = [
   { label: 'All News', value: 'all', icon: <Globe className="w-3.5 h-3.5" /> },
-  { label: 'Economy', value: 'general', icon: <TrendingUp className="w-3.5 h-3.5" /> },
+  { label: 'Economy', value: 'economy', icon: <TrendingUp className="w-3.5 h-3.5" /> },
   { label: 'Stocks', value: 'stocks', icon: <BarChart2 className="w-3.5 h-3.5" /> },
   { label: 'Forex', value: 'forex', icon: <DollarSign className="w-3.5 h-3.5" /> },
   { label: 'Crypto', value: 'crypto', icon: <Bitcoin className="w-3.5 h-3.5" /> },
@@ -17,6 +17,7 @@ const FILTERS: { label: string; value: Category; icon: React.ReactNode }[] = [
 const CATEGORY_COLORS: Record<Category, string> = {
   all: 'bg-slate-900 text-white border-slate-900',
   general: 'bg-blue-600 text-white border-blue-600',
+  economy: 'bg-indigo-600 text-white border-indigo-600',
   stocks: 'bg-emerald-600 text-white border-emerald-600',
   forex: 'bg-amber-600 text-white border-amber-600',
   crypto: 'bg-orange-500 text-white border-orange-500',
@@ -25,6 +26,7 @@ const CATEGORY_COLORS: Record<Category, string> = {
 const CATEGORY_HOVER: Record<Category, string> = {
   all: 'hover:bg-slate-900 hover:text-white hover:border-slate-900',
   general: 'hover:bg-blue-600 hover:text-white hover:border-blue-600',
+  economy: 'hover:bg-indigo-600 text-white border-indigo-600',
   stocks: 'hover:bg-emerald-600 hover:text-white hover:border-emerald-600',
   forex: 'hover:bg-amber-600 hover:text-white hover:border-amber-600',
   crypto: 'hover:bg-orange-500 hover:text-white hover:border-orange-500',
