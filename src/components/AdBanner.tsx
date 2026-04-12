@@ -1,31 +1,34 @@
 type AdBannerProps = {
-  slot: 'header' | 'sidebar' | 'inline';
+  // ปรับให้ยืดหยุ่นขึ้นเพื่อไม่ให้หน้าขาว
+  slot: string; 
   className?: string;
 };
 
-const AD_CONFIG = {
+const AD_CONFIG: Record<string, any> = {
   header: {
     label: 'Advertisement',
     size: 'h-24',
     text: 'Google AdSense — Leaderboard (728×90)',
-    subtext: 'data-ad-slot="HEADER_SLOT_ID" data-ad-format="horizontal"',
+    subtext: 'data-ad-slot="HEADER_SLOT_ID"',
   },
-  sidebar: {
+  footer: {
     label: 'Advertisement',
-    size: 'h-64',
-    text: 'Google AdSense — Rectangle (300×250)',
-    subtext: 'data-ad-slot="SIDEBAR_SLOT_ID" data-ad-format="rectangle"',
+    size: 'h-32',
+    text: 'Google AdSense — Bottom Banner',
+    subtext: 'data-ad-slot="FOOTER_SLOT_ID"',
   },
-  inline: {
+  // ค่าเริ่มต้นถ้าหา slot ไม่เจอ
+  default: {
     label: 'Advertisement',
-    size: 'h-28',
-    text: 'Google AdSense — Banner (468×60)',
-    subtext: 'data-ad-slot="INLINE_SLOT_ID" data-ad-format="fluid"',
-  },
+    size: 'h-24',
+    text: 'Google AdSense — Display Ad',
+    subtext: 'data-ad-slot="GENERAL_SLOT_ID"',
+  }
 };
 
 export default function AdBanner({ slot, className = '' }: AdBannerProps) {
-  const config = AD_CONFIG[slot];
+  // เลือก config ตาม slot ถ้าไม่เจอก็ใช้ default
+  const config = AD_CONFIG[slot] || AD_CONFIG.default;
 
   return (
     <div className={`w-full ${className}`}>
@@ -33,11 +36,10 @@ export default function AdBanner({ slot, className = '' }: AdBannerProps) {
         {config.label}
       </p>
       <div
-        className={`w-full ${config.size} border border-dashed border-gray-300 bg-gray-50 rounded flex flex-col items-center justify-center gap-1`}
-        aria-label="Advertisement placeholder"
+        className={`w-full ${config.size} border border-dashed border-gray-300 bg-gray-50 rounded-xl flex flex-col items-center justify-center overflow-hidden`}
       >
-        <span className="text-xs font-semibold text-gray-400">{config.text}</span>
-        <code className="text-[10px] text-gray-300 font-mono">{config.subtext}</code>
+        <span className="text-gray-400 text-xs font-semibold">{config.text}</span>
+        <span className="text-gray-300 text-[9px] mt-1 font-mono">{config.subtext}</span>
       </div>
     </div>
   );

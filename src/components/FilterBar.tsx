@@ -17,7 +17,7 @@ const FILTERS: { label: string; value: Category; icon: React.ReactNode }[] = [
 const CATEGORY_COLORS: Record<Category, string> = {
   all: 'bg-slate-900 text-white border-slate-900',
   general: 'bg-blue-600 text-white border-blue-600',
-  economy: 'bg-indigo-600 text-white border-indigo-600',
+  economy: 'bg-blue-700 text-white border-blue-700',
   stocks: 'bg-emerald-600 text-white border-emerald-600',
   forex: 'bg-amber-600 text-white border-amber-600',
   crypto: 'bg-orange-500 text-white border-orange-500',
@@ -26,7 +26,7 @@ const CATEGORY_COLORS: Record<Category, string> = {
 const CATEGORY_HOVER: Record<Category, string> = {
   all: 'hover:bg-slate-900 hover:text-white hover:border-slate-900',
   general: 'hover:bg-blue-600 hover:text-white hover:border-blue-600',
-  economy: 'hover:bg-indigo-600 text-white border-indigo-600',
+  economy: 'hover:bg-blue-800 text-white border-indigo-600',
   stocks: 'hover:bg-emerald-600 hover:text-white hover:border-emerald-600',
   forex: 'hover:bg-amber-600 hover:text-white hover:border-amber-600',
   crypto: 'hover:bg-orange-500 hover:text-white hover:border-orange-500',
