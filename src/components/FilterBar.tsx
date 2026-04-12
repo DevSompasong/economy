@@ -1,5 +1,11 @@
-import { BarChart2, DollarSign, Bitcoin, Globe, TrendingUp } from 'lucide-react';
-import type { Category } from '../types/database';
+import {
+  BarChart2,
+  DollarSign,
+  Bitcoin,
+  Globe,
+  TrendingUp,
+} from "lucide-react";
+import type { Category } from "../types/database";
 
 type FilterBarProps = {
   active: Category;
@@ -8,30 +14,46 @@ type FilterBarProps = {
 
 // 1. ใส่รายการปุ่มกลับมาให้ครบ (สำคัญมาก!)
 const FILTERS: { label: string; value: Category; icon: React.ReactNode }[] = [
-  { label: 'All News', value: 'all', icon: <Globe className="w-3.5 h-3.5" /> },
-  { label: 'Economy', value: 'economy', icon: <TrendingUp className="w-3.5 h-3.5" /> },
-  { label: 'Stocks', value: 'stocks', icon: <BarChart2 className="w-3.5 h-3.5" /> },
-  { label: 'Forex', value: 'forex', icon: <DollarSign className="w-3.5 h-3.5" /> },
-  { label: 'Crypto', value: 'crypto', icon: <Bitcoin className="w-3.5 h-3.5" /> },
+  { label: "All News", value: "all", icon: <Globe className="w-3.5 h-3.5" /> },
+  {
+    label: "Economy",
+    value: "economy",
+    icon: <TrendingUp className="w-3.5 h-3.5" />,
+  },
+  {
+    label: "Stocks",
+    value: "stocks",
+    icon: <BarChart2 className="w-3.5 h-3.5" />,
+  },
+  {
+    label: "Forex",
+    value: "forex",
+    icon: <DollarSign className="w-3.5 h-3.5" />,
+  },
+  {
+    label: "Crypto",
+    value: "crypto",
+    icon: <Bitcoin className="w-3.5 h-3.5" />,
+  },
 ];
 
 // 2. แก้สีให้กลับมาเห็นตัวหนังสือชัดๆ (ใช้ text-white)
 const CATEGORY_COLORS: Record<Category, string> = {
-  all: 'bg-slate-900 text-white border-slate-900',
-  general: 'bg-blue-600 text-white border-blue-600',
-  economy: 'bg-indigo-600 text-white border-indigo-600', 
-  stocks: 'bg-emerald-600 text-white border-emerald-600',
-  forex: 'bg-amber-600 text-white border-amber-600',
-  crypto: 'bg-orange-500 text-white border-orange-500',
+  all: "bg-slate-900 text-white border-slate-900",
+  general: "bg-blue-600 text-white border-blue-600",
+  economy: "bg-indigo-600 text-white border-indigo-600",
+  stocks: "bg-emerald-600 text-white border-emerald-600",
+  forex: "bg-amber-600 text-white border-amber-600",
+  crypto: "bg-orange-500 text-white border-orange-500",
 };
 
 const CATEGORY_HOVER: Record<Category, string> = {
-  all: 'hover:bg-slate-800 text-white',
-  general: 'hover:bg-blue-700 text-white',
-  economy: 'hover:bg-indigo-700 text-white', 
-  stocks: 'hover:bg-emerald-700 text-white',
-  forex: 'hover:bg-amber-700 text-white',
-  crypto: 'hover:bg-orange-600 text-white',
+  all: "hover:bg-slate-800 text-white",
+  general: "hover:bg-blue-700 text-white",
+  economy: "hover:bg-indigo-700 text-white",
+  stocks: "hover:bg-emerald-700 text-white",
+  forex: "hover:bg-amber-700 text-white",
+  crypto: "hover:bg-orange-600 text-white",
 };
 
 export default function FilterBar({ active, onChange }: FilterBarProps) {
@@ -43,10 +65,10 @@ export default function FilterBar({ active, onChange }: FilterBarProps) {
             <button
               key={f.value}
               onClick={() => onChange(f.value)}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border transition-all whitespace-nowrap flex-shrink-0 ${
+              className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold border transition-all whitespace-nowrap flex-shrink-0 shadow-sm ${
                 active === f.value
-                  ? CATEGORY_COLORS[f.value]
-                  : `border-gray-200 text-gray-600 bg-white ${CATEGORY_HOVER[f.value]}`
+                  ? `${CATEGORY_COLORS[f.value]} scale-105 shadow-md` // ปุ่มที่เลือก: ใช้สีประจำหมวด + ขยายใหญ่ขึ้นนิดหน่อย
+                  : `border-gray-300 text-slate-700 bg-white hover:border-gray-400 ${CATEGORY_HOVER[f.value]}` // ปุ่มที่ไม่ได้เลือก: ใช้ตัวหนังสือสีเข้มอ่านง่าย
               }`}
               aria-pressed={active === f.value}
             >
