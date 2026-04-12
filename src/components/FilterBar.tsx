@@ -15,12 +15,12 @@ const FILTERS: { label: string; value: Category; icon: React.ReactNode }[] = [
 ];
 
 const CATEGORY_COLORS: Record<Category, string> = {
-  all: 'bg-slate-900 text-gray border-slate-900',
-  general: 'bg-blue-600 text-gray border-blue-600',
-  economy: 'bg-blue-700 text-gray border-blue-700', // ลองเปลี่ยนเป็น blue-700
-  stocks: 'bg-emerald-600 text-gray border-emerald-600',
-  forex: 'bg-amber-600 text-gray border-amber-600',
-  crypto: 'bg-orange-500 text-gray border-orange-500',
+  all: 'bg-slate-900 text-gray-700 border-slate-900',
+  general: 'bg-blue-600 text-gray-700 border-blue-600',
+  economy: 'bg-blue-700 text-gray-700 border-blue-700', // ลองเปลี่ยนเป็น blue-700
+  stocks: 'bg-emerald-600 text-gray-700 border-emerald-600',
+  forex: 'bg-amber-600 text-gray-700 border-amber-600',
+  crypto: 'bg-orange-500 text-gray-700 border-orange-500',
 };
 
 const CATEGORY_HOVER: Record<Category, string> = {
