@@ -24,12 +24,12 @@ const CATEGORY_COLORS: Record<Category, string> = {
 };
 
 const CATEGORY_HOVER: Record<Category, string> = {
-  all: 'hover:bg-slate-800',
-  general: 'hover:bg-blue-700',
-  economy: 'hover:bg-blue-800', // เปลี่ยนให้เข้ากับสีใหม่
-  stocks: 'hover:bg-emerald-700',
-  forex: 'hover:bg-amber-700',
-  crypto: 'hover:bg-orange-600',
+  all: 'hover:bg-slate-800 text-white',
+  general: 'hover:bg-blue-700 text-white',
+  economy: 'hover:bg-blue-800 text-white', // เปลี่ยนให้เข้ากับสีใหม่
+  stocks: 'hover:bg-emerald-700 text-white',
+  forex: 'hover:bg-amber-700 text-white',
+  crypto: 'hover:bg-orange-600 text-white',
 };
 
 export default function FilterBar({ active, onChange }: FilterBarProps) {
