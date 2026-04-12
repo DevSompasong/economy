@@ -15,18 +15,18 @@ const FILTERS: { label: string; value: Category; icon: React.ReactNode }[] = [
 ];
 
 const CATEGORY_COLORS: Record<Category, string> = {
-  all: 'bg-slate-900 text-gray-700 border-slate-900',
-  general: 'bg-blue-600 text-gray-700 border-blue-600',
-  economy: 'bg-blue-700 text-gray-700 border-blue-700', // ลองเปลี่ยนเป็น blue-700
-  stocks: 'bg-emerald-600 text-gray-700 border-emerald-600',
-  forex: 'bg-amber-600 text-gray-700 border-amber-600',
-  crypto: 'bg-orange-500 text-gray-700 border-orange-500',
+  all: 'bg-slate-900 text-white border-slate-900',
+  general: 'bg-blue-600 text-white border-blue-600',
+  economy: 'bg-indigo-600 text-white border-indigo-600', 
+  stocks: 'bg-emerald-600 text-white border-emerald-600',
+  forex: 'bg-amber-600 text-white border-amber-600',
+  crypto: 'bg-orange-500 text-white border-orange-500',
 };
 
 const CATEGORY_HOVER: Record<Category, string> = {
   all: 'hover:bg-slate-800 text-white',
   general: 'hover:bg-blue-700 text-white',
-  economy: 'hover:bg-blue-800 text-white', // เปลี่ยนให้เข้ากับสีใหม่
+  economy: 'hover:bg-indigo-700 text-white', 
   stocks: 'hover:bg-emerald-700 text-white',
   forex: 'hover:bg-amber-700 text-white',
   crypto: 'hover:bg-orange-600 text-white',
