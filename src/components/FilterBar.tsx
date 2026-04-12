@@ -65,12 +65,11 @@ export default function FilterBar({ active, onChange }: FilterBarProps) {
             <button
               key={f.value}
               onClick={() => onChange(f.value)}
-              className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold border transition-all whitespace-nowrap flex-shrink-0 shadow-sm ${
+              className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold border transition-all whitespace-nowrap flex-shrink-0 ${
                 active === f.value
-                  ? `${CATEGORY_COLORS[f.value]} scale-105 shadow-md` // ปุ่มที่เลือก: ใช้สีประจำหมวด + ขยายใหญ่ขึ้นนิดหน่อย
-                  : `border-gray-300 text-slate-700 bg-white hover:border-gray-400 ${CATEGORY_HOVER[f.value]}` // ปุ่มที่ไม่ได้เลือก: ใช้ตัวหนังสือสีเข้มอ่านง่าย
+                  ? "bg-slate-900 text-white border-slate-900 shadow-md" // เมื่อเลือก: ให้เป็นสีดำสนิท ตัวหนังสือขาว (เห็นชัดแน่นอน)
+                  : "bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200" // เมื่อไม่เลือก: ให้เป็นสีเทาอ่อน ตัวหนังสือเทาเข้ม
               }`}
-              aria-pressed={active === f.value}
             >
               {f.icon}
               {f.label}
