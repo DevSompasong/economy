@@ -6,6 +6,7 @@ type FilterBarProps = {
   onChange: (cat: Category) => void;
 };
 
+// 1. ใส่รายการปุ่มกลับมาให้ครบ (สำคัญมาก!)
 const FILTERS: { label: string; value: Category; icon: React.ReactNode }[] = [
   { label: 'All News', value: 'all', icon: <Globe className="w-3.5 h-3.5" /> },
   { label: 'Economy', value: 'economy', icon: <TrendingUp className="w-3.5 h-3.5" /> },
@@ -14,6 +15,7 @@ const FILTERS: { label: string; value: Category; icon: React.ReactNode }[] = [
   { label: 'Crypto', value: 'crypto', icon: <Bitcoin className="w-3.5 h-3.5" /> },
 ];
 
+// 2. แก้สีให้กลับมาเห็นตัวหนังสือชัดๆ (ใช้ text-white)
 const CATEGORY_COLORS: Record<Category, string> = {
   all: 'bg-slate-900 text-white border-slate-900',
   general: 'bg-blue-600 text-white border-blue-600',
