@@ -48,12 +48,12 @@ const CATEGORY_COLORS: Record<Category, string> = {
 };
 
 const CATEGORY_HOVER: Record<Category, string> = {
-  all: 'hover:bg-slate-800',
-  general: 'hover:bg-blue-700',
-  economy: 'hover:bg-indigo-700', 
-  stocks: 'hover:bg-emerald-700',
-  forex: 'hover:bg-amber-700',
-  crypto: 'hover:bg-orange-600',
+  all: "hover:bg-slate-800",
+  general: "hover:bg-blue-700",
+  economy: "hover:bg-indigo-700",
+  stocks: "hover:bg-emerald-700",
+  forex: "hover:bg-amber-700",
+  crypto: "hover:bg-orange-600",
 };
 
 export default function FilterBar({ active, onChange }: FilterBarProps) {
@@ -65,10 +65,10 @@ export default function FilterBar({ active, onChange }: FilterBarProps) {
             <button
               key={f.value}
               onClick={() => onChange(f.value)}
-              className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold border transition-all duration-200 whitespace-nowrap flex-shrink-0 ${
+              className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold border transition-all whitespace-nowrap flex-shrink-0 ${
                 active === f.value
-                  ? `${CATEGORY_COLORS[f.value]} shadow-md scale-105 ${CATEGORY_HOVER[f.value]}` // เมื่อเลือกแล้ว Hover จะยิ่งเข้มขึ้น
-                  : `bg-white text-slate-600 border-gray-200 hover:bg-gray-50 hover:border-gray-300 hover:text-indigo-600` // เมื่อยังไม่เลือก Hover จะขึ้นสีจางๆ
+                  ? "bg-slate-900 text-white border-slate-900 shadow-md" // เมื่อเลือก: ให้เป็นสีดำสนิท ตัวหนังสือขาว (เห็นชัดแน่นอน)
+                  : "bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200" // เมื่อไม่เลือก: ให้เป็นสีเทาอ่อน ตัวหนังสือเทาเข้ม
               }`}
             >
               {f.icon}
