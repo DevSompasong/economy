@@ -65,13 +65,15 @@ export default function FilterBar({ active, onChange }: FilterBarProps) {
             <button
               key={f.value}
               onClick={() => onChange(f.value)}
-              className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold border transition-all whitespace-nowrap flex-shrink-0 ${
+              className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold border transition-all duration-300 whitespace-nowrap flex-shrink-0 shadow-sm ${
                 active === f.value
-                  ? "bg-slate-900 text-white border-slate-900 shadow-md" // เมื่อเลือก: ให้เป็นสีดำสนิท ตัวหนังสือขาว (เห็นชัดแน่นอน)
-                  : "bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200" // เมื่อไม่เลือก: ให้เป็นสีเทาอ่อน ตัวหนังสือเทาเข้ม
+                  ? "bg-gradient-to-r from-indigo-600 to-blue-700 text-white border-indigo-600 shadow-indigo-200/50 scale-105"
+                  : "bg-white text-slate-600 border-slate-200 hover:border-indigo-300 hover:bg-indigo-50/50 hover:text-indigo-600"
               }`}
             >
-              {f.icon}
+              <span className={`${active === f.value ? "animate-pulse" : ""}`}>
+                {f.icon}
+              </span>
               {f.label}
             </button>
           ))}
