@@ -48,12 +48,12 @@ const CATEGORY_COLORS: Record<Category, string> = {
 };
 
 const CATEGORY_HOVER: Record<Category, string> = {
-  all: "hover:bg-slate-800 text-white",
-  general: "hover:bg-blue-700 text-white",
-  economy: "hover:bg-indigo-700 text-white",
-  stocks: "hover:bg-emerald-700 text-white",
-  forex: "hover:bg-amber-700 text-white",
-  crypto: "hover:bg-orange-600 text-white",
+  all: 'hover:bg-slate-800',
+  general: 'hover:bg-blue-700',
+  economy: 'hover:bg-indigo-700', 
+  stocks: 'hover:bg-emerald-700',
+  forex: 'hover:bg-amber-700',
+  crypto: 'hover:bg-orange-600',
 };
 
 export default function FilterBar({ active, onChange }: FilterBarProps) {
@@ -65,15 +65,13 @@ export default function FilterBar({ active, onChange }: FilterBarProps) {
             <button
               key={f.value}
               onClick={() => onChange(f.value)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold border transition-all duration-300 whitespace-nowrap flex-shrink-0 shadow-sm ${
+              className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold border transition-all duration-200 whitespace-nowrap flex-shrink-0 ${
                 active === f.value
-                  ? "bg-gradient-to-r from-indigo-600 to-blue-700 text-white border-indigo-600 shadow-indigo-200/50 scale-105"
-                  : "bg-white text-slate-600 border-slate-200 hover:border-indigo-300 hover:bg-indigo-50/50 hover:text-indigo-600"
+                  ? `${CATEGORY_COLORS[f.value]} shadow-md scale-105 ${CATEGORY_HOVER[f.value]}` // เมื่อเลือกแล้ว Hover จะยิ่งเข้มขึ้น
+                  : `bg-white text-slate-600 border-gray-200 hover:bg-gray-50 hover:border-gray-300 hover:text-indigo-600` // เมื่อยังไม่เลือก Hover จะขึ้นสีจางๆ
               }`}
             >
-              <span className={`${active === f.value ? "animate-pulse" : ""}`}>
-                {f.icon}
-              </span>
+              {f.icon}
               {f.label}
             </button>
           ))}
