@@ -28,22 +28,30 @@ serve(async (req: Request) => {
 
     const newsApiKey = Deno.env.get('NEWSAPI_KEY')
    
-    const response = await fetch(`https://newsapi.org/v2/everything?q=(economy OR stocks OR forex OR crypto)&language=en&pageSize=10&apiKey=${newsApiKey}`)
+    const response = await fetch(`https://newsapi.org/v2/everything?q=(economy OR stocks OR forex OR crypto OR "central bank" OR inflation OR "market news" OR "gold price")&language=en&pageSize=50&apiKey=${newsApiKey}`)
     const data = await response.json()
 
+    // --- ส่วนที่แก้ไข: ตรวจสอบว่ามีข้อมูล articles ส่งมาจริงไหม ถ้าไม่มีให้หยุดรันและบอกสาเหตุ ---
+    if (!data.articles || !Array.isArray(data.articles)) {
+      return new Response(JSON.stringify({ 
+        error: "NewsAPI Error", 
+        details: data.message || "No articles found in response" 
+      }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        status: 400,
+      })
+    }
 
-   
     const resolvedArticles = await Promise.all(
       data.articles.map(async (article: any) => {
         const titleTh = await translateToThai(article.title);
         const descTh = await translateToThai(article.description);
         
-        // --- ส่วนที่เพิ่มใหม่: ตรวจสอบหมวดหมู่จากคำสำคัญ ---
         const titleLower = (article.title || "").toLowerCase();
         const descLower = (article.description || "").toLowerCase();
         const combinedText = `${titleLower} ${descLower}`;
 
-        let categoryTag = 'ECONOMY'; // ค่าเริ่มต้นถ้าไม่เข้าเงื่อนไขอื่น
+        let categoryTag = 'ECONOMY';
 
         if (combinedText.includes('forex') || combinedText.includes('currency') || combinedText.includes('exchange rate')) {
           categoryTag = 'FOREX';
@@ -52,7 +60,6 @@ serve(async (req: Request) => {
         } else if (combinedText.includes('crypto') || combinedText.includes('bitcoin') || combinedText.includes('ethereum') || combinedText.includes('blockchain')) {
           categoryTag = 'CRYPTO';
         }
-        // -------------------------------------------
 
         return {
           title: titleTh,
@@ -63,13 +70,13 @@ serve(async (req: Request) => {
           image_url: article.urlToImage,
           published_at: article.publishedAt,
           source_name: article.source.name,
-          category: categoryTag // แก้จาก 'business' เป็นตัวแปร categoryTag
+          category: categoryTag
         }
       })
     );
 
     const { error } = await supabase
-      .from('news_articles') // ตรวจสอบชื่อตารางให้ตรงกับใน Screenshot (369)
+      .from('news_articles')
       .upsert(resolvedArticles, { onConflict: 'url' })
 
     if (error) throw error
