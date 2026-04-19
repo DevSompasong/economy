@@ -28,7 +28,9 @@ serve(async (req: Request) => {
 
     const newsApiKey = Deno.env.get('NEWSAPI_KEY')
    
-    const response = await fetch(`https://newsapi.org/v2/everything?q=(economy OR stocks OR forex OR crypto OR "central bank" OR inflation OR "market news" OR "gold price")&language=en&pageSize=50&apiKey=${newsApiKey}`)
+   const response = await fetch(
+  `https://newsapi.org/v2/everything?q=(economy OR stocks OR forex OR crypto OR "central bank" OR inflation OR "market news" OR "gold price" OR "interest rates" OR "stock market" OR "federal reserve" OR "nasdaq" OR "bitcoin news" OR "commodities")&language=en&pageSize=20&apiKey=${newsApiKey}`
+);
     const data = await response.json()
 
     // --- ส่วนที่แก้ไข: ตรวจสอบว่ามีข้อมูล articles ส่งมาจริงไหม ถ้าไม่มีให้หยุดรันและบอกสาเหตุ ---
