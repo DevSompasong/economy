@@ -122,6 +122,9 @@ function HomePage() {
               >
                 Privacy Policy
               </a>
+              <Link to="/terms" className="hover:text-blue-600">
+                Terms of Service
+              </Link>
               <a
                 href="/contact"
                 className="hover:text-blue-600 transition-colors"
@@ -140,17 +143,14 @@ function HomePage() {
   );
 }
 
-// 2. ตัวควบคุม Routing หลัก
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
         {/* หน้าแรก */}
         <Route path="/" element={<HomePage />} />
-
         {/* หน้าอ่านรายละเอียดข่าว */}
         <Route path="/news/:id" element={<NewsDetailPage />} />
-
         {/* หน้า About Us */}
         <Route
           path="/about"
@@ -165,7 +165,7 @@ export default function App() {
               <h1 className="text-3xl font-bold mb-6">About EconoFeed</h1>
               <p className="whitespace-pre-line text-gray-700 leading-relaxed">
                 ยินดีต้อนรับสู่ EconoFeed{"\n"}
-                แพลตฟอร์ม rวบรวมข่าวสารด้านเศรษฐกิจและการลงทุนแบบเรียลไทม์{"\n"}
+                แพลตฟอร์มรวบรวมข่าวสารด้านเศรษฐกิจและการลงทุนแบบเรียลไทม์{"\n"}
                 เรามุ่งมั่นที่จะเป็นศูนย์กลางข้อมูลสำหรับนักลงทุนและผู้ที่สนใจสถานการณ์โลก
                 {"\n"}
                 โดยการนำเสนอข้อมูลที่สดใหม่ ครอบคลุมทั้ง ตลาดหุ้น (Stocks),
@@ -181,7 +181,6 @@ export default function App() {
             </div>
           }
         />
-
         {/* หน้า Privacy Policy */}
         <Route
           path="/privacy"
@@ -223,7 +222,51 @@ export default function App() {
             </div>
           }
         />
-
+        {/* เพิ่มหน้า Terms of Service ตรงนี้ครับ */}
+        // คัดลอกส่วนนี้ไปวางต่อจากหน้า Privacy Policy ในไฟล์ App.tsx
+        ของคุณได้เลยครับ
+        {/* หน้า Terms of Service */}
+        <Route
+          path="/terms"
+          element={
+            <div className="max-w-4xl mx-auto p-10 bg-white mt-10 rounded-lg shadow">
+              <Link
+                to="/"
+                className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 mb-6 font-medium transition-colors"
+              >
+                <ArrowLeft className="w-4 h-4" /> ย้อนกลับ
+              </Link>
+              <h1 className="text-3xl font-bold mb-6">Terms of Service</h1>
+              <div className="text-gray-700 space-y-4">
+                <p>
+                  ยินดีต้อนรับสู่ EconoFeed
+                  การเข้าใช้งานเว็บไซต์นี้ถือว่าคุณยอมรับข้อตกลงและเงื่อนไขดังต่อไปนี้:
+                </p>
+                <p>
+                  <strong>1. การใช้ข้อมูล:</strong>{" "}
+                  เนื้อหาข่าวสารและการวิเคราะห์บนเว็บไซต์นี้จัดทำขึ้นเพื่อวัตถุประสงค์ในการให้ข้อมูลทั่วไปเท่านั้น
+                  ไม่ถือเป็นการให้คำแนะนำทางการเงินหรือการชี้ชวนลงทุน
+                </p>
+                <p>
+                  <strong>2. ทรัพย์สินทางปัญญา:</strong> โลโก้ รูปแบบเว็บไซต์
+                  และเนื้อหาที่จัดทำโดยทีมงานเป็นทรัพย์สินของ EconoFeed
+                  ห้ามมิให้คัดลอกหรือดัดแปลงเพื่อนำไปใช้ในเชิงพาณิชย์โดยไม่ได้รับอนุญาต
+                </p>
+                <p>
+                  <strong>3. ข้อมูลจากบุคคลที่สาม:</strong>{" "}
+                  เราดึงข้อมูลข่าวสารมาจากแหล่งข่าวภายนอกผ่าน API
+                  ความถูกต้องของข้อมูลขึ้นอยู่กับแหล่งข่าวต้นทาง
+                  และเราจะไม่รับผิดชอบต่อความสูญเสียใดๆ
+                  ที่เกิดจากการใช้ข้อมูลจากเว็บไซต์นี้
+                </p>
+                <p>
+                  <strong>4. การเปลี่ยนแปลงเงื่อนไข:</strong>{" "}
+                  เราขอสงวนสิทธิ์ในการปรับปรุงหรือเปลี่ยนแปลงข้อตกลงการใช้งานเหล่านี้ได้ตลอดเวลาโดยไม่ต้องแจ้งให้ทราบล่วงหน้า
+                </p>
+              </div>
+            </div>
+          }
+        />
         {/* หน้า Contact Us */}
         <Route
           path="/contact"
