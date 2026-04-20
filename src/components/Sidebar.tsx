@@ -104,12 +104,12 @@ export default function Sidebar({ trendingArticles }: SidebarProps) {
 
       {/* 3. AdBanner - มีแค่อันเดียว อยู่ล่างสุด ไม่ซ้อนแน่นอน */}
       <div className="w-full">
-        <div className="bg-gray-50/50 rounded-lg border border-dashed border-gray-200 p-2 text-center">
+        <div className="bg-gray-50/50 rounded-lg p-2 text-center">
           <AdBanner slot="sidebar" className="min-h-[250px]" />
         </div>
-        <p className="text-[9px] text-gray-400 text-center mt-2 uppercase tracking-widest font-medium">
+        {/* <p className="text-[9px] text-gray-400 text-center mt-2 uppercase tracking-widest font-medium">
           Advertisement
-        </p>
+        </p> */}
       </div>
     </aside>
   );

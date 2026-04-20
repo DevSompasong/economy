@@ -91,9 +91,9 @@ function HomePage() {
             {/* --- เพิ่มโฆษณา Sidebar ตรงนี้ --- */}
             <div className="mt-6 sticky top-24">
               <AdBanner slot="sidebar" />
-              <p className="text-[10px] text-gray-400 text-center mt-2 uppercase tracking-widest">
+              {/* <p className="text-[10px] text-gray-400 text-center mt-2 uppercase tracking-widest">
                 Advertisement
-              </p>
+              </p> */}
             </div>
           </div>
         </div>
