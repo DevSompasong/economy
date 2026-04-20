@@ -1,34 +1,28 @@
-import { ExternalLink, Clock, Tag } from "lucide-react";
-import type { NewsArticle } from "../types/database";
+import { ExternalLink, Clock, Tag } from 'lucide-react';
+import type { NewsArticle } from '../types/database';
 
 type FeaturedNewsProps = {
   article: NewsArticle;
 };
 
 const CATEGORY_BADGE: Record<string, string> = {
-  general: "bg-blue-600",
-  stocks: "bg-emerald-600",
-  forex: "bg-amber-600",
-  crypto: "bg-orange-500",
+  general: 'bg-blue-600',
+  stocks: 'bg-emerald-600',
+  forex: 'bg-amber-600',
+  crypto: 'bg-orange-500',
 };
 
 function formatDate(dateStr: string | null) {
-  if (!dateStr) return "";
+  if (!dateStr) return '';
   const d = new Date(dateStr);
-  return d.toLocaleDateString("en-US", {
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+  return d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' });
 }
 
 function timeAgo(dateStr: string | null) {
-  if (!dateStr) return "";
+  if (!dateStr) return '';
   const diff = Date.now() - new Date(dateStr).getTime();
   const mins = Math.floor(diff / 60000);
-  if (mins < 1) return "Just now";
+  if (mins < 1) return 'Just now';
   if (mins < 60) return `${mins}m ago`;
   const hrs = Math.floor(mins / 60);
   if (hrs < 24) return `${hrs}h ago`;
@@ -36,7 +30,8 @@ function timeAgo(dateStr: string | null) {
 }
 
 export default function FeaturedNews({ article }: FeaturedNewsProps) {
-  const badgeColor = CATEGORY_BADGE[article.category] || "bg-slate-600";
+  const badgeColor = CATEGORY_BADGE[article.category] || 'bg-slate-600';
+  const fallbackImage = "https://images.unsplash.com/photo-1611974714851-eb605161882c?q=80&w=1200&auto=format&fit=crop";
 
   return (
     <article
@@ -45,48 +40,31 @@ export default function FeaturedNews({ article }: FeaturedNewsProps) {
       itemType="https://schema.org/NewsArticle"
     >
       <meta itemProp="headline" content={article.title} />
-      <meta itemProp="datePublished" content={article.published_at || ""} />
-      {article.source_name && (
-        <meta itemProp="author" content={article.source_name} />
-      )}
+      <meta itemProp="datePublished" content={article.published_at || ''} />
+      {article.source_name && <meta itemProp="author" content={article.source_name} />}
 
-      {article.image_url ? (
-        <div className="relative h-72 sm:h-96 overflow-hidden">
-          <img
-            // ถ้า image_url เป็น NULL ให้ใช้รูปสำรองจาก Unsplash แทนทันที
-            src={
-              article.image_url ||
-              "https://images.unsplash.com/photo-1611974714851-eb605161882c?q=80&w=1200&auto=format&fit=crop"
-            }
-            alt={article.title}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-            loading="eager"
-            onError={(e) => {
-              // เผื่อลิงก์รูปจริงเสีย (Error) ก็ให้สลับมาใช้รูปสำรองด้วย
-              (e.target as HTMLImageElement).src =
-                "https://images.unsplash.com/photo-1611974714851-eb605161882c?q=80&w=1200&auto=format&fit=crop";
-            }}
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/60 to-transparent" />
-        </div>
-      ) : (
-        <div className="h-72 sm:h-96 bg-gradient-to-br from-slate-800 to-slate-700" />
-      )}
+      {/* ส่วนแสดงรูปภาพ: จะแสดงเสมอแม้ image_url จะเป็น NULL โดยใช้รูปสำรองแทน */}
+      <div className="relative h-72 sm:h-96 overflow-hidden">
+        <img
+          src={article.image_url || fallbackImage}
+          alt={article.title}
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          loading="eager"
+          onError={(e) => {
+            (e.target as HTMLImageElement).src = fallbackImage;
+          }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/60 to-transparent" />
+      </div>
 
-      <div
-        className={`absolute ${article.image_url ? "bottom-0 left-0 right-0" : "inset-0 flex flex-col justify-end"} p-6`}
-      >
+      <div className="absolute bottom-0 left-0 right-0 p-6">
         <div className="flex items-center gap-2 mb-3">
-          <span
-            className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider text-white ${badgeColor}`}
-          >
+          <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider text-white ${badgeColor}`}>
             <Tag className="w-2.5 h-2.5" />
             {article.category}
           </span>
           {article.source_name && (
-            <span className="text-xs font-semibold text-gray-300">
-              {article.source_name}
-            </span>
+            <span className="text-xs font-semibold text-gray-300">{article.source_name}</span>
           )}
         </div>
 
@@ -98,10 +76,7 @@ export default function FeaturedNews({ article }: FeaturedNewsProps) {
         </h1>
 
         {article.description && (
-          <p
-            className="text-sm text-gray-300 line-clamp-2 mb-4 max-w-2xl"
-            itemProp="description"
-          >
+          <p className="text-sm text-gray-300 line-clamp-2 mb-4 max-w-2xl" itemProp="description">
             {article.description}
           </p>
         )}
@@ -109,10 +84,7 @@ export default function FeaturedNews({ article }: FeaturedNewsProps) {
         <div className="flex items-center justify-between">
           <span className="flex items-center gap-1 text-xs text-gray-400">
             <Clock className="w-3 h-3" />
-            <time
-              dateTime={article.published_at || ""}
-              title={formatDate(article.published_at)}
-            >
+            <time dateTime={article.published_at || ''} title={formatDate(article.published_at)}>
               {timeAgo(article.published_at)}
             </time>
           </span>
