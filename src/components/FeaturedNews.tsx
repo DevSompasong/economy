@@ -25,20 +25,16 @@ function timeAgo(dateStr: string | null) {
 
 export default function FeaturedNews({ article }: FeaturedNewsProps) {
   const badgeColor = CATEGORY_BADGE[article.category] || 'bg-slate-600';
-  const fallbackImage = "https://images.unsplash.com/photo-1611974714851-eb605161882c?q=80&w=1200&auto=format&fit=crop";
+  const fallbackImage = "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=1200&q=80";
 
   return (
     <article
-      className="relative rounded-xl overflow-hidden bg-slate-900 text-white shadow-lg group h-[300px] sm:h-[400px]"
+      className="relative rounded-xl overflow-hidden bg-slate-900 text-white shadow-lg group h-[350px] sm:h-[450px]"
       itemScope
       itemType="https://schema.org/NewsArticle"
     >
-      <meta itemProp="headline" content={article.title} />
-      <meta itemProp="datePublished" content={article.published_at || ''} />
-      {article.source_name && <meta itemProp="author" content={article.source_name} />}
-
-      {/* ส่วนรูปและเงา (Layer ล่าง) */}
-      <div className="absolute inset-0 z-0">
+      {/* 1. ชั้นรูปภาพ (ล่างสุด) */}
+      <div className="absolute inset-0">
         <img
           src={article.image_url || fallbackImage}
           alt={article.title}
@@ -48,26 +44,26 @@ export default function FeaturedNews({ article }: FeaturedNewsProps) {
             (e.target as HTMLImageElement).src = fallbackImage;
           }}
         />
-        {/* ปรับแก้ให้รูปสว่างขึ้น: ลดความเข้มของ Gradient ลง (via-slate-900/40 และ via-20%) */}
-        <div className="absolute inset-0 bg-gradient-to-b from-slate-900 via-slate-900/40 via-20% to-slate-900 z-10" />
+        {/* ปรับ Gradient ใหม่ให้สว่างขึ้น: ใช้สีดำเฉพาะด้านล่างเพื่อให้อ่านตัวหนังสือออก */}
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/20 to-transparent z-10" />
       </div>
 
-      {/* ส่วนเนื้อหา (Layer บนสุด - ใส่ z-index ให้ลอยเหนือเงา) */}
+      {/* 2. ชั้นเนื้อหา (บนสุด) */}
       <div className="relative h-full flex flex-col p-6 z-20">
-        {/* 1. แท็กและแหล่งข่าว: ย้ายมาไว้ด้านบนสุด (flex justify-start) */}
+        {/* แท็กและแหล่งข่าว - อยู่ด้านบน */}
         <div className="flex items-center gap-2 mb-3">
           <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider text-white ${badgeColor}`}>
             <Tag className="w-2.5 h-2.5" />
             {article.category}
           </span>
           {article.source_name && (
-            <span className="text-xs font-semibold text-gray-300 z-20">{article.source_name}</span>
+            <span className="text-xs font-semibold text-gray-200">{article.source_name}</span>
           )}
         </div>
 
-        {/* 2. พาดหัวข่าวและคำอธิบาย: ย้ายลงมาไว้ด้านล่างสุด (mt-auto) */}
+        {/* พาดหัวข่าวและปุ่ม - ดันลงมาอยู่ด้านล่างด้วย mt-auto */}
         <div className="mt-auto">
-          <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold leading-tight mb-2 text-white">
+          <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold leading-tight mb-2 text-white drop-shadow-md">
             {article.title}
           </h1>
 
@@ -86,7 +82,7 @@ export default function FeaturedNews({ article }: FeaturedNewsProps) {
               href={article.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded text-xs font-semibold transition-colors z-20"
+              className="flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded text-xs font-semibold transition-colors shadow-lg"
             >
               Read Full Story
               <ExternalLink className="w-3 h-3" />
