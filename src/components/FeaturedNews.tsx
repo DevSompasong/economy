@@ -53,12 +53,16 @@ export default function FeaturedNews({ article }: FeaturedNewsProps) {
       {article.image_url ? (
         <div className="relative h-72 sm:h-96 overflow-hidden">
           <img
-            src={article.image_url}
+            // ถ้า image_url เป็น NULL ให้ใช้รูปสำรองจาก Unsplash แทนทันที
+            src={
+              article.image_url ||
+              "https://images.unsplash.com/photo-1611974714851-eb605161882c?q=80&w=1200&auto=format&fit=crop"
+            }
             alt={article.title}
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             loading="eager"
             onError={(e) => {
-              // ถ้าโหลดรูปจริงไม่ได้ ให้เอารูปสำรองจาก Unsplash มาใส่แทนครับ
+              // เผื่อลิงก์รูปจริงเสีย (Error) ก็ให้สลับมาใช้รูปสำรองด้วย
               (e.target as HTMLImageElement).src =
                 "https://images.unsplash.com/photo-1611974714851-eb605161882c?q=80&w=1200&auto=format&fit=crop";
             }}
