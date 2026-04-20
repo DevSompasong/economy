@@ -31,7 +31,7 @@ function timeAgo(dateStr: string | null) {
 
 export default function FeaturedNews({ article }: FeaturedNewsProps) {
   const badgeColor = CATEGORY_BADGE[article.category] || 'bg-slate-600';
-  const fallbackImage = "https://images.unsplash.com/photo-1611974714851-eb605161882c?q=80&w=1200&auto=format&fit=crop";
+  const fallbackImage = "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=800";
 
   return (
     <article
@@ -47,6 +47,7 @@ export default function FeaturedNews({ article }: FeaturedNewsProps) {
       <div className="relative h-72 sm:h-96 overflow-hidden">
         <img
           src={article.image_url || fallbackImage}
+          style={{ position: 'relative', zIndex: 1 }}
           alt={article.title}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           loading="eager"
@@ -54,7 +55,7 @@ export default function FeaturedNews({ article }: FeaturedNewsProps) {
             (e.target as HTMLImageElement).src = fallbackImage;
           }}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/60 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent z-10" />
       </div>
 
       <div className="absolute bottom-0 left-0 right-0 p-6">
