@@ -27,13 +27,32 @@ serve(async (req: Request) => {
     )
 
     const newsApiKey = Deno.env.get('NEWSAPI_KEY')
-   
-   const response = await fetch(
-  `https://newsapi.org/v2/everything?q=(economy OR stocks OR forex OR crypto OR "central bank" OR inflation OR "market news" OR "gold price" OR "interest rates" OR "stock market" OR "federal reserve" OR "nasdaq" OR "bitcoin news" OR "commodities")&language=en&pageSize=20&apiKey=${newsApiKey}`
-);
+    
+    // --- ส่วนที่แก้ไข: ดึงข่าวตั้งแต่เมื่อวานถึงวันนี้เพื่อให้มีข้อมูลชัวร์ๆ ---
+    const now = new Date();
+    const today = now.toISOString().split('T')[0];
+    const yesterday = new Date(now.setDate(now.getDate() - 1)).toISOString().split('T')[0];
+    
+    // ลบข่าวที่เก่าเกิน 3 วันทิ้ง (คงความสดใหม่)
+    // await supabase
+    //   .from('news_articles')
+    //   .delete()
+    //   .lt('published_at', new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString());
+
+    const response = await fetch(
+      `https://newsapi.org/v2/everything?` +
+      `q=(economy OR stocks OR forex OR crypto OR "central bank" OR inflation OR "market news" OR "gold price" OR "interest rates" OR "stock market" OR "federal reserve" OR "nasdaq" OR "bitcoin news" OR "commodities")&` +
+      `from=${yesterday}&` + // เริ่มจากเมื่อวาน
+      `to=${today}&` +     // จนถึงวันนี้
+      `sortBy=publishedAt&` + 
+      `language=en&` +
+      `pageSize=40&` +
+      `apiKey=${newsApiKey}`
+    );
+    // -----------------------------------------------------------------
+
     const data = await response.json()
 
-    // --- ส่วนที่แก้ไข: ตรวจสอบว่ามีข้อมูล articles ส่งมาจริงไหม ถ้าไม่มีให้หยุดรันและบอกสาเหตุ ---
     if (!data.articles || !Array.isArray(data.articles)) {
       return new Response(JSON.stringify({ 
         error: "NewsAPI Error", 
@@ -83,7 +102,11 @@ serve(async (req: Request) => {
 
     if (error) throw error
 
-    return new Response(JSON.stringify({ success: true, count: resolvedArticles.length }), {
+    return new Response(JSON.stringify({ 
+      success: true, 
+      count: resolvedArticles.length, 
+      range: `${yesterday} to ${today}` 
+    }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       status: 200,
     })

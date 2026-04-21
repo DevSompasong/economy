@@ -1,8 +1,9 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { fetchArticlesFromDB, triggerAllCategoriesFetch, triggerNewsFetch } from '../services/newsService';
+import { useState, useEffect, useCallback } from 'react';
+import { fetchArticlesFromDB } from '../services/newsService';
 import type { NewsArticle, Category } from '../types/database';
 
-const AUTO_REFRESH_INTERVAL = 30 * 60 * 1000;
+// ปิดระบบ Auto Refresh อัตโนมัติ เพื่อประหยัด Token
+// const AUTO_REFRESH_INTERVAL = 30 * 60 * 1000; 
 
 export function useNews() {
   const [articles, setArticles] = useState<NewsArticle[]>([]);
@@ -16,7 +17,7 @@ export function useNews() {
   const [page, setPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const [lastRefreshed, setLastRefreshed] = useState<Date | null>(null);
-  const autoRefreshTimer = useRef<ReturnType<typeof setInterval> | null>(null);
+  // const autoRefreshTimer = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const loadArticles = useCallback(async (resetPage = false) => {
     try {
@@ -25,6 +26,7 @@ export function useNews() {
       const currentPage = resetPage ? 1 : page;
       if (resetPage) setPage(1);
 
+      // ดึงข้อมูลจากฐานข้อมูล Supabase โดยตรง (ไม่เสีย Token ดึงข่าว/แปลภาษา)
       const { articles: data, count } = await fetchArticlesFromDB(category, searchQuery, currentPage);
       setArticles(data);
       setTotalCount(count);
@@ -40,42 +42,53 @@ export function useNews() {
     }
   }, [category, searchQuery, page]);
 
+  // ปรับปรุงฟังก์ชัน Refresh ให้แค่โหลดข้อมูลล่าสุดจาก DB
   const handleRefresh = useCallback(async () => {
     try {
       setRefreshing(true);
       setRefreshMessage(null);
-      await triggerAllCategoriesFetch();
+      
+      // ปิดบรรทัดนี้: เพื่อไม่ให้หน้าบ้านสั่งบอททำงานเองทุกครั้งที่ Refresh
+      // await triggerAllCategoriesFetch(); 
+      
       setLastRefreshed(new Date());
-      setRefreshMessage('News updated successfully');
+      setRefreshMessage('Syncing with database...');
       await loadArticles(true);
     } catch {
-      setRefreshMessage('Refresh failed. Please try again.');
+      setRefreshMessage('Failed to sync. Please try again.');
     } finally {
       setRefreshing(false);
       setTimeout(() => setRefreshMessage(null), 4000);
     }
   }, [loadArticles]);
 
-  const handleCategoryRefresh = useCallback(async (cat: string) => {
+  const handleCategoryRefresh = useCallback(async (_cat: string) => {
     try {
-      await triggerNewsFetch(cat);
+      // ปิดการสั่งดึงข่าวรายหมวดหมู่จากหน้าบ้าน
+      // await triggerNewsFetch(cat);
     } catch {
-      // silent fail for background category fetch
+      // silent fail
     }
   }, []);
 
+  // โหลดข่าวจาก DB ตอนเปลี่ยนหมวดหมู่หรือค้นหา
   useEffect(() => {
     loadArticles(true);
   }, [category, searchQuery]);
 
+  // โหลดข่าวหน้าถัดไป
   useEffect(() => {
     if (page > 1) loadArticles(false);
   }, [page]);
 
-  useEffect(() => {
+  // ลบ useEffect ที่เคยสั่ง handleRefresh() ตอนเปิดเว็บออก
+  /* useEffect(() => {
     handleRefresh();
-  }, []);
+  }, []); 
+  */
 
+  // ลบระบบ Auto Refresh Timer ออก
+  /*
   useEffect(() => {
     autoRefreshTimer.current = setInterval(() => {
       handleRefresh();
@@ -85,6 +98,7 @@ export function useNews() {
       if (autoRefreshTimer.current) clearInterval(autoRefreshTimer.current);
     };
   }, [handleRefresh]);
+  */
 
   return {
     articles,
