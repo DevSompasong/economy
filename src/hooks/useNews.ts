@@ -1,104 +1,111 @@
-import { useState, useEffect, useCallback } from 'react';
-import { fetchArticlesFromDB } from '../services/newsService';
-import type { NewsArticle, Category } from '../types/database';
-
-// ปิดระบบ Auto Refresh อัตโนมัติ เพื่อประหยัด Token
-// const AUTO_REFRESH_INTERVAL = 30 * 60 * 1000; 
+import { useState, useEffect, useCallback } from "react";
+// 1. เพิ่มการ Import useSearchParams
+import { useSearchParams } from "react-router-dom";
+import { fetchArticlesFromDB } from "../services/newsService";
+import type { NewsArticle, Category } from "../types/database";
 
 export function useNews() {
+  // 2. เรียกใช้งาน searchParams
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // 3. อ่านค่าหน้าจาก URL ถ้าไม่มีให้เป็นหน้า 1
+  const urlPage = parseInt(searchParams.get("page") || "1");
+
   const [articles, setArticles] = useState<NewsArticle[]>([]);
-  const [featuredArticle, setFeaturedArticle] = useState<NewsArticle | null>(null);
+  const [featuredArticle, setFeaturedArticle] = useState<NewsArticle | null>(
+    null,
+  );
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [refreshMessage, setRefreshMessage] = useState<string | null>(null);
-  const [category, setCategory] = useState<Category>('all');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [page, setPage] = useState(1);
+  const [category, setCategory] = useState<Category>("all");
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // 4. ใช้ค่าจาก URL เป็นค่าเริ่มต้นของ State
+  const [page, setPage] = useState(urlPage);
   const [totalCount, setTotalCount] = useState(0);
   const [lastRefreshed, setLastRefreshed] = useState<Date | null>(null);
-  // const autoRefreshTimer = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const loadArticles = useCallback(async (resetPage = false) => {
-    try {
-      setLoading(true);
-      setError(null);
-      const currentPage = resetPage ? 1 : page;
-      if (resetPage) setPage(1);
+  // 5. ฟังก์ชันเปลี่ยนหน้าที่จะไปแก้เลขบน URL ด้วย
+  const handlePageChange = useCallback(
+    (newPage: number) => {
+      setPage(newPage);
+      setSearchParams(
+        (prev) => {
+          prev.set("page", newPage.toString());
+          return prev;
+        },
+        { replace: true },
+      ); // replace: true เพื่อไม่ให้รกประวัติ History
+    },
+    [setSearchParams],
+  );
 
-      // ดึงข้อมูลจากฐานข้อมูล Supabase โดยตรง (ไม่เสีย Token ดึงข่าว/แปลภาษา)
-      const { articles: data, count } = await fetchArticlesFromDB(category, searchQuery, currentPage);
-      setArticles(data);
-      setTotalCount(count);
+  const loadArticles = useCallback(
+    async (resetPage = false) => {
+      try {
+        setLoading(true);
+        setError(null);
+        const currentPage = resetPage ? 1 : page;
 
-      if (resetPage && data.length > 0) {
-        setFeaturedArticle(data[0]);
+        if (resetPage) {
+          handlePageChange(1); // รีเซ็ต URL เป็นหน้า 1
+        }
+
+        const { articles: data, count } = await fetchArticlesFromDB(
+          category,
+          searchQuery,
+          currentPage,
+        );
+        setArticles(data);
+        setTotalCount(count);
+
+        if (resetPage && data.length > 0) {
+          setFeaturedArticle(data[0]);
+        }
+      } catch (err) {
+        setError("Failed to load articles. Please try again.");
+        console.error(err);
+      } finally {
+        setLoading(false);
       }
-    } catch (err) {
-      setError('Failed to load articles. Please try again.');
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  }, [category, searchQuery, page]);
+    },
+    [category, searchQuery, page, handlePageChange],
+  );
 
-  // ปรับปรุงฟังก์ชัน Refresh ให้แค่โหลดข้อมูลล่าสุดจาก DB
+  // ซิงค์ State page เมื่อกดย้อนกลับ (Back Button)
+  useEffect(() => {
+    if (urlPage !== page) {
+      setPage(urlPage);
+    }
+  }, [urlPage]);
+
+  // โหลดข่าวจาก DB
+  useEffect(() => {
+    loadArticles(true);
+  }, [category, searchQuery]);
+
+
+  useEffect(() => {
+    if (page >= 1) loadArticles(false);
+  }, [page]);
+
+
   const handleRefresh = useCallback(async () => {
     try {
       setRefreshing(true);
       setRefreshMessage(null);
-      
-      // ปิดบรรทัดนี้: เพื่อไม่ให้หน้าบ้านสั่งบอททำงานเองทุกครั้งที่ Refresh
-      // await triggerAllCategoriesFetch(); 
-      
       setLastRefreshed(new Date());
-      setRefreshMessage('Syncing with database...');
+      setRefreshMessage("Syncing with database...");
       await loadArticles(true);
     } catch {
-      setRefreshMessage('Failed to sync. Please try again.');
+      setRefreshMessage("Failed to sync. Please try again.");
     } finally {
       setRefreshing(false);
       setTimeout(() => setRefreshMessage(null), 4000);
     }
   }, [loadArticles]);
-
-  const handleCategoryRefresh = useCallback(async (_cat: string) => {
-    try {
-      // ปิดการสั่งดึงข่าวรายหมวดหมู่จากหน้าบ้าน
-      // await triggerNewsFetch(cat);
-    } catch {
-      // silent fail
-    }
-  }, []);
-
-  // โหลดข่าวจาก DB ตอนเปลี่ยนหมวดหมู่หรือค้นหา
-  useEffect(() => {
-    loadArticles(true);
-  }, [category, searchQuery]);
-
-  // โหลดข่าวหน้าถัดไป
-  useEffect(() => {
-    if (page > 1) loadArticles(false);
-  }, [page]);
-
-  // ลบ useEffect ที่เคยสั่ง handleRefresh() ตอนเปิดเว็บออก
-  /* useEffect(() => {
-    handleRefresh();
-  }, []); 
-  */
-
-  // ลบระบบ Auto Refresh Timer ออก
-  /*
-  useEffect(() => {
-    autoRefreshTimer.current = setInterval(() => {
-      handleRefresh();
-    }, AUTO_REFRESH_INTERVAL);
-
-    return () => {
-      if (autoRefreshTimer.current) clearInterval(autoRefreshTimer.current);
-    };
-  }, [handleRefresh]);
-  */
 
   return {
     articles,
@@ -114,8 +121,7 @@ export function useNews() {
     lastRefreshed,
     setCategory,
     setSearchQuery,
-    setPage,
+    setPage: handlePageChange, // ส่งฟังก์ชันใหม่ไปแทน
     handleRefresh,
-    handleCategoryRefresh,
   };
 }
