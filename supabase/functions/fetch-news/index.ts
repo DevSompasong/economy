@@ -150,7 +150,6 @@ serve(async (req: Request) => {
         is_published: true,
       });
 
-      
       await delay(3000);
     }
 
